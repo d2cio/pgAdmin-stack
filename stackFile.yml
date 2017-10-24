@@ -1,0 +1,49 @@
+version: '1.0'
+services:
+  - name: pgadmin
+    type: python
+    version: 2.7
+    globalDeps: |
+      curl -sL https://deb.nodesource.com/setup_6.x | bash -
+      apt-get install -y nodejs
+      npm install --global yarn
+      pip install -r requirements.txt
+    source:
+      type: git
+      url: https://github.com/postgres/pgadmin4
+    ports:
+      - 5050
+    remoteAccess: true
+    localDeps: |
+      cd ./web
+      yarn install
+      yarn run bundle
+    startCommand: python ./web/pgAdmin4.py
+    volumes:
+      - directory: /var/lib/pgadmin
+    configFiles:
+      - dest: $MAIN_PATH/web/config_local.py
+        src: ./configs/config_local.py
+    env:
+      PGADMIN_SETUP_EMAIL: null
+      PGADMIN_SETUP_PASSWORD: null
+    deployTo:
+      - pgadmin
+
+  # - name: web
+  #   type: nginx
+  #   version: 1.13
+  #   ports:
+  #     - 80
+  #     - 443
+  #   remoteAccess: true
+  #   serviceFiles:
+  #     - name: redmine
+  #   deployTo:
+  #     - redmine
+
+hosts:
+  - name: pgadmin
+    requirements:
+      cores: 1
+      memory: 2

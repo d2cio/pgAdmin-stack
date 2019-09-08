@@ -5,7 +5,8 @@ services:
     version: 2.7
     globalDeps: |
       curl -sL https://deb.nodesource.com/setup_8.x | bash -
-      apt-get install -y nodejs
+      apt-get install -y nodejs --no-install-recommends apt-utils
+      apt-get install npm
       npm install --global yarn
       pip install -r requirements.txt
     source:
